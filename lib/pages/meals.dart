@@ -7,10 +7,10 @@ class MealsPage extends StatelessWidget {
   const MealsPage({
     super.key,
     required this.meals,
-    required this.title,
+    this.title,
   });
 
-  final String title;
+  final String? title;
   final List<Meal> meals;
 
   void selectMeal(BuildContext context, Meal meal) {
@@ -65,11 +65,15 @@ class MealsPage extends StatelessWidget {
         ),
       );
     }
+    
+    if(title == null) {
+      return content;
+    }
 
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text(title),
+        title: Text(title!),
       ),
       body: content,
     );
