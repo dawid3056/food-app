@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:food_app/data/data.dart';
+import 'package:food_app/models/meal.dart';
 import 'package:food_app/pages/meals.dart';
 import 'package:food_app/widgets/category_grid_item.dart';
 import 'package:food_app/models/category.dart';
 
 class CategoriesPage extends StatelessWidget {
-  const CategoriesPage({super.key});
-
+  const CategoriesPage({
+    super.key,
+    required this.onToggleFavourite,
+  });
+  
+  final void Function(Meal meal) onToggleFavourite;
+  
   void _selectCategory(BuildContext context, Category category) {
     final filteredMeals = availableMeals
         .where((meal) => meal.categories.contains(category.id))
@@ -16,6 +22,7 @@ class CategoriesPage extends StatelessWidget {
         builder: (ctx) => MealsPage(
           meals: filteredMeals,
           title: category.title,
+          onToggleFavourite: onToggleFavourite,
         ),
       ),
     );

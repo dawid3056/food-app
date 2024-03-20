@@ -6,9 +6,11 @@ class MealDetailsPage extends StatelessWidget {
   const MealDetailsPage({
     super.key,
     required this.meal,
+    required this.onToggleFavourite,
   });
 
   final Meal meal;
+  final void Function(Meal meal) onToggleFavourite;
 
   String get complextityText {
     return meal.complexity.name[0].toUpperCase() +
@@ -26,6 +28,14 @@ class MealDetailsPage extends StatelessWidget {
       appBar: AppBar(
         title: Text(meal.title),
         centerTitle: true,
+        actions: [
+          IconButton(
+            onPressed: () {
+              onToggleFavourite(meal);
+            },
+            icon: const Icon(Icons.star),
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         child: Container(
@@ -33,13 +43,14 @@ class MealDetailsPage extends StatelessWidget {
           child: Column(
             children: [
               Container(
-                decoration: BoxDecoration(borderRadius: BorderRadius.circular(10),),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                ),
                 child: Image.network(
                   meal.imageUrl,
                   height: 300,
                   width: double.infinity,
                   fit: BoxFit.cover,
-                  
                 ),
               ),
               const SizedBox(
