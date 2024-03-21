@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:food_app/models/meal.dart';
 import 'package:food_app/pages/categories.dart';
+import 'package:food_app/pages/filters.dart';
 import 'package:food_app/pages/meals.dart';
 import 'package:food_app/widgets/main_drawer.dart';
 
@@ -47,10 +48,13 @@ class _TabsPageState extends State<TabsPage> {
   }
 
   void _setPage(String identifier) {
-    if(identifier == 'filters') {
-      
-    } else {
-      Navigator.of(context).pop();
+    Navigator.of(context).pop();
+    if (identifier == 'filters') {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (ctx) => const FiltersPage(),
+        ),
+      );
     }
   }
 
@@ -75,7 +79,9 @@ class _TabsPageState extends State<TabsPage> {
           activePageTitle,
         ),
       ),
-      drawer: MainDrawer(onSelectPage: _setPage,),
+      drawer: MainDrawer(
+        onSelectPage: _setPage,
+      ),
       body: activePage,
       bottomNavigationBar: BottomNavigationBar(
         onTap: _selectPage,
