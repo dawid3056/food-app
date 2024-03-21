@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:food_app/models/meal.dart';
 import 'package:food_app/pages/categories.dart';
 import 'package:food_app/pages/meals.dart';
+import 'package:food_app/widgets/main_drawer.dart';
 
 class TabsPage extends StatefulWidget {
   const TabsPage({super.key});
@@ -66,6 +67,7 @@ class _TabsPageState extends State<TabsPage> {
           activePageTitle,
         ),
       ),
+      drawer: const MainDrawer(),
       body: activePage,
       bottomNavigationBar: BottomNavigationBar(
         onTap: _selectPage,
