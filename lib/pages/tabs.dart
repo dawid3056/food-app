@@ -46,6 +46,14 @@ class _TabsPageState extends State<TabsPage> {
     });
   }
 
+  void _setPage(String identifier) {
+    if(identifier == 'filters') {
+      
+    } else {
+      Navigator.of(context).pop();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     Widget activePage = CategoriesPage(
@@ -67,7 +75,7 @@ class _TabsPageState extends State<TabsPage> {
           activePageTitle,
         ),
       ),
-      drawer: const MainDrawer(),
+      drawer: MainDrawer(onSelectPage: _setPage,),
       body: activePage,
       bottomNavigationBar: BottomNavigationBar(
         onTap: _selectPage,
