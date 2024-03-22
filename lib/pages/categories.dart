@@ -9,12 +9,14 @@ class CategoriesPage extends StatelessWidget {
   const CategoriesPage({
     super.key,
     required this.onToggleFavourite,
+    required this.choosenMeals,
   });
   
   final void Function(Meal meal) onToggleFavourite;
+  final List<Meal> choosenMeals;
   
   void _selectCategory(BuildContext context, Category category) {
-    final filteredMeals = availableMeals
+    final filteredMeals = choosenMeals
         .where((meal) => meal.categories.contains(category.id))
         .toList();
     Navigator.of(context).push(

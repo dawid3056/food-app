@@ -1,9 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:food_app/data/data.dart';
 import 'package:food_app/models/meal.dart';
 import 'package:food_app/pages/categories.dart';
 import 'package:food_app/pages/filters.dart';
 import 'package:food_app/pages/meals.dart';
 import 'package:food_app/widgets/main_drawer.dart';
+
+const kInitialFilters = {
+    Filter.glutenFree: false,
+    Filter.lactoseFree: false,
+    Filter.vegetarian: false,
+    Filter.vegan: false,
+  };
 
 class TabsPage extends StatefulWidget {
   const TabsPage({super.key});
@@ -15,6 +23,7 @@ class TabsPage extends StatefulWidget {
 class _TabsPageState extends State<TabsPage> {
   int _selectedPageIndex = 0;
   final List<Meal> _favouriteMeals = [];
+  Map<Filter, bool> _selectedFilters = kInitialFilters;
 
   void _showInfoMessage(String message) {
     ScaffoldMessenger.of(context).clearSnackBars();
@@ -47,21 +56,40 @@ class _TabsPageState extends State<TabsPage> {
     });
   }
 
-  void _setPage(String identifier) {
+  void _setPage(String identifier) async {
     Navigator.of(context).pop();
     if (identifier == 'filters') {
-      Navigator.of(context).push(
+      final result = await Navigator.of(context).push<Map<Filter, bool>>(
         MaterialPageRoute(
-          builder: (ctx) => const FiltersPage(),
+          builder: (ctx) => FiltersPage(currentFilters: _selectedFilters,),
         ),
       );
+      setState(() {
+      _selectedFilters = result ?? kInitialFilters;
+      });
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final choosenMeals = availableMeals.where((meal) {
+      if(_selectedFilters[Filter.glutenFree]! && !meal.isGlutenFree) {
+        return false;
+      }
+      if(_selectedFilters[Filter.lactoseFree]! && !meal.isLactoseFree) {
+        return false;
+      }
+      if(_selectedFilters[Filter.vegetarian]! && !meal.isVegetarian) {
+        return false;
+      }
+      if(_selectedFilters[Filter.vegan]! && !meal.isVegan) {
+        return false;
+      }
+      return true;
+    }).toList();
     Widget activePage = CategoriesPage(
       onToggleFavourite: _toggleMealFavouriteStatus,
+      choosenMeals: choosenMeals,
     );
     var activePageTitle = 'Categories';
 
