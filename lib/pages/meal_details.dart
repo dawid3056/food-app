@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:food_app/models/meal.dart';
 import 'package:food_app/widgets/meal_item_trait.dart';
+import 'package:food_app/providers/favourites_provider.dart';
 
-class MealDetailsPage extends StatelessWidget {
+class MealDetailsPage extends ConsumerWidget {
   const MealDetailsPage({
     super.key,
     required this.meal,
-    required this.onToggleFavourite,
   });
 
   final Meal meal;
-  final void Function(Meal meal) onToggleFavourite;
 
   String get complextityText {
     return meal.complexity.name[0].toUpperCase() +
@@ -23,7 +23,7 @@ class MealDetailsPage extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(
         title: Text(meal.title),
@@ -31,7 +31,15 @@ class MealDetailsPage extends StatelessWidget {
         actions: [
           IconButton(
             onPressed: () {
-              onToggleFavourite(meal);
+              final wasAdded = ref
+                  .read(favouriteMealsProvider.notifier)
+                  .toggleMealFavouriteStatus(meal);
+              ScaffoldMessenger.of(context).clearSnackBars();
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(wasAdded ? 'Meal added as a favourite' : 'Meal removed from favourites'),
+                ),
+              );
             },
             icon: const Icon(Icons.star),
           ),

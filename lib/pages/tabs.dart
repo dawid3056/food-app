@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:food_app/models/meal.dart';
 import 'package:food_app/pages/categories.dart';
 import 'package:food_app/pages/filters.dart';
 import 'package:food_app/pages/meals.dart';
 import 'package:food_app/providers/meals_provider.dart';
 import 'package:food_app/widgets/main_drawer.dart';
+import 'package:food_app/providers/favourites_provider.dart';
 
 const kInitialFilters = {
     Filter.glutenFree: false,
@@ -23,33 +23,7 @@ class TabsPage extends ConsumerStatefulWidget {
 
 class _TabsPageState extends ConsumerState<TabsPage> {
   int _selectedPageIndex = 0;
-  final List<Meal> _favouriteMeals = [];
   Map<Filter, bool> _selectedFilters = kInitialFilters;
-
-  void _showInfoMessage(String message) {
-    ScaffoldMessenger.of(context).clearSnackBars();
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-      ),
-    );
-  }
-
-  void _toggleMealFavouriteStatus(Meal meal) {
-    final isExisting = _favouriteMeals.contains(meal);
-
-    if (isExisting) {
-      setState(() {
-        _favouriteMeals.remove(meal);
-      });
-      _showInfoMessage('Meal is no longer a favourite');
-    } else {
-      setState(() {
-        _favouriteMeals.add(meal);
-      });
-      _showInfoMessage('Added to favourite meals');
-    }
-  }
 
   void _selectPage(int index) {
     setState(() {
@@ -90,15 +64,14 @@ class _TabsPageState extends ConsumerState<TabsPage> {
       return true;
     }).toList();
     Widget activePage = CategoriesPage(
-      onToggleFavourite: _toggleMealFavouriteStatus,
       choosenMeals: choosenMeals,
     );
     var activePageTitle = 'Categories';
 
     if (_selectedPageIndex == 1) {
+      final favouriteMeals = ref.watch(favouriteMealsProvider);
       activePage = MealsPage(
-        meals: _favouriteMeals,
-        onToggleFavourite: _toggleMealFavouriteStatus,
+        meals: favouriteMeals,
       );
       activePageTitle = 'Your favourites';
     }
